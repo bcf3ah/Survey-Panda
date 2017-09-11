@@ -2,17 +2,22 @@ const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
+const bodyParser = require("body-parser");
 
 //Project Files
 const authRoutes = require('./routes/authRoutes');
 const keys = require('./config/keys');
 require("./models/User"); //execute initializiation of mongo User class here so we don't have to require it in other places, which can throw errors in testing environments.
+const stripeRoutes = require('./routes/stripeRoutes');
 
 //Import passport service for execution
 require("./services/passport");
 
 //Initiate Express app
 const app = express();
+
+//Use bodyparser
+app.use(bodyParser.json());
 
 //Tell passport we're using cookie sessions for authentication
 app.use(cookieSession({
@@ -35,8 +40,9 @@ mongoose.connection
   })
   .on('error', error => console.log(error));
 
-//Handle Authentication Routes
+//Handle All Routes
 app.use(authRoutes);
+app.use(stripeRoutes);
 
 app.get('/', (req, res) => {
   res.send("Home");

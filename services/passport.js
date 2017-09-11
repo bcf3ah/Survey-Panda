@@ -23,18 +23,16 @@ passport.use(new GoogleStrategy({
   clientID: keys.googleClientID,
   clientSecret: keys.googleClientSecret,
   callbackURL: '/auth/google/callback',
-  proxy: true
-}, (accessToken, refreshToken, {
-  id,
-  displayName
-}, done) => {
+  proxy: true //for Heroku's proxy
+},
+async (accessToken, refreshToken, {id, displayName}, done) => {
   //check if profile.id is in our db. If not, create new user and send client a cookie. If yes, just send them a cookie.
-  User.findOne({googleId: id}).then(existingUser => {
-    if (!existingUser) {
-      new User({googleId: id, name: displayName}).save().then(newUser => done(null, newUser)).catch(error => console.log(error));
-    } else {
-      console.log("User already exists");
-      done(null, existingUser)
-    }
-  }).catch(error => console.log(error));
+  const existingUser = await User.findOne({googleId: id});
+
+  if(existingUser){
+    return done(null, existingUser);
+  }
+
+  const newUser = await new User({googleId: id, name: displayName}).save();
+  done(null, newUser);
 }));
