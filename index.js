@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
+const path = require('path');
 
 //Project Files
 const authRoutes = require('./routes/authRoutes');
@@ -44,9 +45,16 @@ mongoose.connection
 app.use(authRoutes);
 app.use(stripeRoutes);
 
-app.get('/', (req, res) => {
-  res.send("Home");
-});
+//Serve React app for all other routes
+if(process.env.NODE_ENV === 'production'){
+  //Express first checks to see if there's a file in client/build that matches the request (ie main.js)
+  app.use(express.static('client/build'));
+
+  //if not, we have a catch-all route that serves index.html
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
 
 //Set up port for deployment or local env
 const PORT = process.env.PORT || 3000;
