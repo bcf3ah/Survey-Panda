@@ -6,10 +6,12 @@ const bodyParser = require("body-parser");
 const path = require('path');
 
 //Project Files
-const authRoutes = require('./routes/authRoutes');
 const keys = require('./config/keys');
-require("./models/User"); //execute initializiation of mongo User class here so we don't have to require it in other places, which can throw errors in testing environments.
+require("./models/User"); //execute initializiation of mongo User and Survey classes here so we don't have to require it in other places, which can throw errors in testing environments.
+require("./models/Survey");
+const authRoutes = require('./routes/authRoutes');
 const stripeRoutes = require('./routes/stripeRoutes');
+const surveyRoutes = require("./routes/surveyRoutes");
 
 //Import passport service for execution
 require("./services/passport");
@@ -44,6 +46,7 @@ mongoose.connection
 //Handle All Routes
 app.use(authRoutes);
 app.use(stripeRoutes);
+app.use(surveyRoutes);
 
 //Serve React app for all other routes
 if(process.env.NODE_ENV === 'production'){
