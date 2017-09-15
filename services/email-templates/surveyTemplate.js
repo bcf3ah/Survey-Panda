@@ -1,4 +1,4 @@
-const {redirectDomain} = require('../../config/keys');
+const keys = require('../../config/keys');
 
 module.exports = survey => {
   return `
@@ -12,7 +12,7 @@ module.exports = survey => {
             <a href="${redirectDomain}/api/surveys/${survey.id}/yes">Yes</a>
           </div>
           <div>
-            <a href="${redirectDomain}/api/surveys/${survey.id}/no">No</a>
+            <a href="${keys.redirectDomain}/api/surveys/${survey.id}/no">No</a>
           </div>
         </div>
       </body>
