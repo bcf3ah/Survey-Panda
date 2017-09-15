@@ -42,7 +42,7 @@ router.post("/api/surveys/webhooks", (req, res) => {
       }).exec();
     })
     .value();
-
+    console.log("webhook received");
 });
 
 //survey creation route handler
