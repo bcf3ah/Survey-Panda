@@ -19,6 +19,7 @@ router.get("/api/surveys/:surveyId/:choice", (req, res) => {
 
 //webhook route for Sendgrid
 router.post("/api/surveys/webhooks", (req, res) => {
+  console.log(req.body);
   const p = new Path('/api/surveys/:surveyId/:choice');
   _.chain(req.body)
     .map(({url, email}) => {
